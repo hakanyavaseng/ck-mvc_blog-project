@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlog.Data.Contexts;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 

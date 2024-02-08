@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCBlog.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240208191217_mig-1")]
+    [Migration("20240208195602_mig-1")]
     partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,8 @@ namespace MVCBlog.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -64,7 +65,8 @@ namespace MVCBlog.Data.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
@@ -76,6 +78,32 @@ namespace MVCBlog.Data.Migrations
                     b.HasIndex("ImageId");
 
                     b.ToTable("Articles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f9de7f35-2d51-42e2-9674-ce3aa2b8c7a5"),
+                            CategoryId = new Guid("e5129fa7-7cb3-421a-b6b8-de983725a187"),
+                            Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur auctor imperdiet faucibus. In hac habitasse platea dictumst. \r\n							Sed porttitor, nulla ac elementum placerat, felis justo ullamcorper est, et pulvinar nulla velit non risus. \r\n							Proin ac aliquam turpis. Suspendisse non nisi dapibus, viverra lacus nec, fringilla tellus. Donec efficitur lorem ac lacus pharetra sagittis. \r\n							Fusce viverra est vitae quam vulputate, at ornare nisl accumsan. Duis a tincidunt lorem. In nibh lectus, pharetra ac quam.",
+                            CreatedBy = "Admin",
+                            CreatedDate = new DateTime(2024, 2, 8, 22, 56, 2, 577, DateTimeKind.Local).AddTicks(5686),
+                            ImageId = new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"),
+                            IsDeleted = false,
+                            Title = "ASP.NET Core Article 1",
+                            ViewCount = 15
+                        },
+                        new
+                        {
+                            Id = new Guid("76af112e-8a27-49ff-bf3b-20c1db196385"),
+                            CategoryId = new Guid("efaf03fc-92eb-45d7-8980-7c75d5a5ea8c"),
+                            Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur auctor imperdiet faucibus. In hac habitasse platea dictumst. \r\n							Sed porttitor, nulla ac elementum placerat, felis justo ullamcorper est, et pulvinar nulla velit non risus. \r\n							Proin ac aliquam turpis. Suspendisse non nisi dapibus, viverra lacus nec, fringilla tellus. Donec efficitur lorem ac lacus pharetra sagittis. \r\n							Fusce viverra est vitae quam vulputate, at ornare nisl accumsan. Duis a tincidunt lorem. In nibh lectus, pharetra ac quam.",
+                            CreatedBy = "User",
+                            CreatedDate = new DateTime(2024, 2, 8, 22, 56, 2, 577, DateTimeKind.Local).AddTicks(5703),
+                            ImageId = new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"),
+                            IsDeleted = false,
+                            Title = "Entity Framework Article 2",
+                            ViewCount = 25
+                        });
                 });
 
             modelBuilder.Entity("MVCBlog.Entity.Entities.Category", b =>
@@ -113,6 +141,24 @@ namespace MVCBlog.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e5129fa7-7cb3-421a-b6b8-de983725a187"),
+                            CreatedBy = "Admin",
+                            CreatedDate = new DateTime(2024, 2, 8, 22, 56, 2, 577, DateTimeKind.Local).AddTicks(5917),
+                            IsDeleted = false,
+                            Name = "ASP.Net Core"
+                        },
+                        new
+                        {
+                            Id = new Guid("efaf03fc-92eb-45d7-8980-7c75d5a5ea8c"),
+                            CreatedBy = "Admin",
+                            CreatedDate = new DateTime(2024, 2, 8, 22, 56, 2, 577, DateTimeKind.Local).AddTicks(5920),
+                            IsDeleted = false,
+                            Name = "Entity Framework"
+                        });
                 });
 
             modelBuilder.Entity("MVCBlog.Entity.Entities.Image", b =>
@@ -154,6 +200,26 @@ namespace MVCBlog.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Images");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"),
+                            CreatedBy = "Admin",
+                            CreatedDate = new DateTime(2024, 2, 8, 22, 56, 2, 577, DateTimeKind.Local).AddTicks(6062),
+                            FileName = "aspnetcore.jpg",
+                            FileType = "image/jpeg",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"),
+                            CreatedBy = "Admin",
+                            CreatedDate = new DateTime(2024, 2, 8, 22, 56, 2, 577, DateTimeKind.Local).AddTicks(6076),
+                            FileName = "entityframework.jpg",
+                            FileType = "image/jpeg",
+                            IsDeleted = false
+                        });
                 });
 
             modelBuilder.Entity("MVCBlog.Entity.Entities.Article", b =>

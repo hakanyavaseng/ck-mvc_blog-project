@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlog.Entity.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace MVCBlog.Data.Contexts
 {
@@ -15,6 +11,12 @@ namespace MVCBlog.Data.Contexts
 		//Options constructor
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 		{
+		}
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			//This method is checks all IEntityTypeConfiguration implementations in the assembly and applies them.
+			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 		}
 
 		//Entities

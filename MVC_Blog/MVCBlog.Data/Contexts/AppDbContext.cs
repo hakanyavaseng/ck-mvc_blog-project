@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MVCBlog.Entity.Entities;
+using MVCBlog.Entity.Entities.Identity;
 using System.Reflection;
 
 namespace MVCBlog.Data.Contexts
 {
-	public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser,AppRole,Guid,AppUserClaim,AppUserRole,AppUserLogin,AppRoleClaim,AppUserToken>
 	{
 		protected AppDbContext(){}
 
@@ -15,6 +17,8 @@ namespace MVCBlog.Data.Contexts
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			base.OnModelCreating(modelBuilder);
+
 			//This method checks all IEntityTypeConfiguration implementations in the assembly and applies them.
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 		}

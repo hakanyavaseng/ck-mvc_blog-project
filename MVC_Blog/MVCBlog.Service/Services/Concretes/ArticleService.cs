@@ -17,7 +17,23 @@ namespace MVCBlog.Service.Services.Concretes
 			_mapper = mapper;
 		}
 
-		public async Task<List<ArticleDto>> GetAllArticlesWithCategoryNonDeletedAsync()
+		public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
+		{
+			var userId = Guid.Parse("7893082F-7266-41F5-8E2C-D89989EE60D0");
+
+			var article = new Article()
+			{
+				Title = articleAddDto.Title,
+				Content = articleAddDto.Content,
+				CategoryId = articleAddDto.CategoryId,
+				AppUserId = userId
+			};
+
+			await _unitOfWork.GetRepository<Article>().AddAsync(article);
+			await _unitOfWork.SaveAsync();
+		}
+
+        public async Task<List<ArticleDto>> GetAllArticlesWithCategoryNonDeletedAsync()
 		{
             var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(a =>a.IsDeleted==false,x=>x.Category);
 			var map = _mapper.Map<List<ArticleDto>>(articles);

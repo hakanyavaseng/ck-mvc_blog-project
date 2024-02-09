@@ -1,9 +1,8 @@
 ﻿using MVCBlog.Core.Entities;
-using MVCBlog.Entity.Entities;
 
 namespace MVCBlog.Entity.Entities
 {
-	public class Article : EntityBase
+    public class Article : EntityBase
 	{
         public string Title { get; set; }
         public string Content { get; set; }

@@ -15,7 +15,7 @@ namespace MVCBlog.Data.Contexts
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			//This method is checks all IEntityTypeConfiguration implementations in the assembly and applies them.
+			//This method checks all IEntityTypeConfiguration implementations in the assembly and applies them.
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 		}
 

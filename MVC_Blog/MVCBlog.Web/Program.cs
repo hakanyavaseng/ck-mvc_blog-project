@@ -1,9 +1,11 @@
 using MVCBlog.Data.Extensions;
+using MVCBlog.Service.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Extensions
-builder.Services.LoadDataLayerExtensions(builder.Configuration);
+builder.Services.AddDataLayer(builder.Configuration);
+builder.Services.AddServiceLayer();
 
 
 // Add services to the container.

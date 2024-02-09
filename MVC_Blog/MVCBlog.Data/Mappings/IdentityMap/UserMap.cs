@@ -57,6 +57,7 @@ namespace MVCBlog.Data.Mappings.IdentityMap
                 LastName = "Yavaş",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
+                ImageId = Guid.Parse("906D333C-201D-4B39-8E21-52A3ACC1FF73")
             };
 
             var admin = new AppUser()
@@ -74,6 +75,7 @@ namespace MVCBlog.Data.Mappings.IdentityMap
                 LastName = "Güneş",
                 SecurityStamp = Guid.NewGuid().ToString(),
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
+                ImageId = Guid.Parse("3EDBDE25-8F71-4834-AC2D-C1665C10BC63")
             };
 
             superAdmin.PasswordHash = CreatePasswordHash(superAdmin, "123456");

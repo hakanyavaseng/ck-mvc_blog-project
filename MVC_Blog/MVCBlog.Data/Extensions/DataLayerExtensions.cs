@@ -10,7 +10,7 @@ namespace MVCBlog.Data.Extensions
 {
 	public static class DataLayerExtensions
 	{
-		public static IServiceCollection LoadDataLayerExtensions(this IServiceCollection services, IConfiguration configuration) 
+		public static IServiceCollection AddDataLayer(this IServiceCollection services, IConfiguration configuration) 
 		{
 			// Add generic repository
 			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

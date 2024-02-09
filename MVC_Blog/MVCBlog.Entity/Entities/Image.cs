@@ -1,4 +1,5 @@
 ﻿using MVCBlog.Core.Entities;
+using MVCBlog.Entity.Entities.Identity;
 
 namespace MVCBlog.Entity.Entities
 {
@@ -7,6 +8,13 @@ namespace MVCBlog.Entity.Entities
         public Guid Id { get; set; }
 		public string FileName { get; set; }
 		public string FileType { get; set; }
+
+		//Article
 		public ICollection<Article> Articles { get; set; }
+
+		//AppUser
+		public Guid AppUserId { get; set; }
+		public ICollection<AppUser> Users { get; set; }
+
     }
 }

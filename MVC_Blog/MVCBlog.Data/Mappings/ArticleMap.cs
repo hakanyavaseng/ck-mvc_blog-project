@@ -32,7 +32,9 @@ namespace MVCBlog.Data.Mappings
 				CreatedDate = DateTime.Now,
 				CategoryId = Guid.Parse("E5129FA7-7CB3-421A-B6B8-DE983725A187"),
 				ImageId = Guid.Parse("906D333C-201D-4B39-8E21-52A3ACC1FF73"),
-				IsDeleted = false
+				IsDeleted = false,
+				AppUserId = Guid.Parse("7893082F-7266-41F5-8E2C-D89989EE60D0")
+				
 			},
 			new Article()
 			{
@@ -47,7 +49,8 @@ namespace MVCBlog.Data.Mappings
 				CreatedDate = DateTime.Now,
 				CategoryId = Guid.Parse("EFAF03FC-92EB-45D7-8980-7C75D5A5EA8C"),
 				ImageId = Guid.Parse("3EDBDE25-8F71-4834-AC2D-C1665C10BC63"),
-				IsDeleted = false
+				IsDeleted = false,
+				AppUserId = Guid.Parse("84CCAF88-5507-4DBF-8DDD-8F607DB51F0A")
 			}
 			);
 

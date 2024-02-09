@@ -1,9 +1,9 @@
-﻿using MVCBlog.Entity.Entities;
+﻿using MVCBlog.Entity.DTOs.Articles;
 
 namespace MVCBlog.Service.Services.Abstractions
 {
-	public interface IArticleService
+    public interface IArticleService
 	{
-		Task<List<Article>> GetAllArticlesAsync();
+		Task<List<ArticleDto>> GetAllArticlesAsync();
 	}
 }

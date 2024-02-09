@@ -32,18 +32,18 @@ builder.Services
 #region Cookie Settings
 builder.Services.ConfigureApplicationCookie(config =>
 {
-	config.LoginPath = "/Admin/Auth/Login"; //This is the automatic redirection path when the user is not authorized and tries to access an authorized page.
-	config.LogoutPath = "/Admin/Auth/Logout";
-	config.Cookie = new CookieBuilder
-	{
-		Name = "MVCBlog",
-		HttpOnly = true,
-		SameSite = SameSiteMode.Strict, // This is a security feature that prevents the browser from sending the cookie along with cross-site requests.
-		SecurePolicy = CookieSecurePolicy.SameAsRequest // In production, this should be set to Always because it requires HTTPS to work.
-	};
-	config.SlidingExpiration = true; //If this is true, the cookie will be refreshed every time the user visits the site.
-	config.ExpireTimeSpan = TimeSpan.FromDays(1); // This cookie will expire after 1 day.
-	config.AccessDeniedPath = "/Admin/Auth/AccessDenied";
+    config.LoginPath = new PathString("/Admin/Auth/Login");
+    config.LogoutPath = new PathString("/Admin/Auth/Logout");
+    config.Cookie = new CookieBuilder
+    {
+        Name = "MVCBlog",
+        HttpOnly = true,
+        SameSite = SameSiteMode.Strict,
+        SecurePolicy = CookieSecurePolicy.SameAsRequest //Always 
+    };
+    config.SlidingExpiration = true;
+    config.ExpireTimeSpan = TimeSpan.FromDays(7);
+    config.AccessDeniedPath = new PathString("/Admin/Auth/AccessDenied");
 });
 
 #endregion

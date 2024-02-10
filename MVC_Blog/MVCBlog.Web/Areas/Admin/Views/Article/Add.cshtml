@@ -12,11 +12,13 @@
             <div class="card mb-4">
                 <h5 class="card-header"></h5>
                 <form asp-controller="Article" asp-action="Add" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly"></div>
                     <div class="card-body">
 
                         <div class="form-group">
                            <label asp-for="CategoryId">Kategori</label>
                            <select id="categoryList" class="form-control" asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
+                               <span asp-validation-for="CategoryId"></span>
                            <span asp-validation-for="CategoryId" class="text-danger"></span>
                        </select>
                         </div>
@@ -24,11 +26,15 @@
                         <div class="form-group">
                             <label asp-for="Title" id="defaultFormControlInput" class="form-label mb-3">Başlık</label>
                             <input asp-for="Title" class="form-control mb-3" id="defaultFormControlInput" placeholder="Lütfen başlık giriniz!" aria-describedby="defaultFormControlHelp">
+                            <span asp-validation-for="Title"></span>
+
                         </div>
 
                         <div class="form-group">
                             <label asp-for="Content" class="form-label mb-3">İçerik</label>
                             <textarea asp-for="Content" type="text" class="form-control mb-3" id="defaultFormControlInput" style="min-height:300px" placeholder="Lütfen içerik giriniz!" aria-describedby="defaultFormControlHelp"></textarea>
+                            <span asp-validation-for="Content"></span>
+
                         </div>
 
                         <div class="form-group">

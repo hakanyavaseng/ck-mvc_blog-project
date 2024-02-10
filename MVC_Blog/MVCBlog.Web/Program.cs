@@ -3,6 +3,7 @@ using MVCBlog.Data.Contexts;
 using MVCBlog.Data.Extensions;
 using MVCBlog.Entity.Entities.Identity;
 using MVCBlog.Service.Extensions;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,13 @@ builder.Services.ConfigureApplicationCookie(config =>
 #endregion
 
 
+//Toastr
+builder.Services.AddControllersWithViews().AddNToastNotifyToastr(new ToastrOptions()
+{
+    PositionClass = ToastPositions.TopRight,
+	TimeOut = 3000,
+	CloseButton = true
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
@@ -62,6 +70,8 @@ if (!app.Environment.IsDevelopment())
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
+
+app.UseNToastNotify();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

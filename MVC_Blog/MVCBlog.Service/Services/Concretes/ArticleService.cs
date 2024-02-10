@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MVCBlog.Data.UnitOfWorks;
 using MVCBlog.Entity.DTOs.Articles;
 using MVCBlog.Entity.Entities;
+using MVCBlog.Service.Extensions;
 using MVCBlog.Service.Services.Abstractions;
+using System.Security.Claims;
 
 namespace MVCBlog.Service.Services.Concretes
 {
@@ -10,19 +13,25 @@ namespace MVCBlog.Service.Services.Concretes
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly ClaimsPrincipal _user;
 
-		public ArticleService(IUnitOfWork unitOfWork, IMapper mapper)
+		public ArticleService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
+			_httpContextAccessor = httpContextAccessor;
+			_user = _httpContextAccessor.HttpContext.User;
 		}
 
 		public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
 		{
-			var userId = Guid.Parse("7893082F-7266-41F5-8E2C-D89989EE60D0");
+			var userId = _user.GetLoggedInUserId();
+			var userEmail = _user.GetLoggedInEmail();
 			var imageId = Guid.Parse("906D333C-201D-4B39-8E21-52A3ACC1FF73");
 
-			var article = new Article(articleAddDto.Title, articleAddDto.Content, userId, articleAddDto.CategoryId, imageId);
+			var article = new Article(articleAddDto.Title, articleAddDto.Content, userId, articleAddDto.CategoryId, imageId, userEmail);
+			
 
 			await _unitOfWork.GetRepository<Article>().AddAsync(article);
 			await _unitOfWork.SaveAsync();
@@ -42,15 +51,18 @@ namespace MVCBlog.Service.Services.Concretes
 			return map;
 		}
 
-		public async Task<string> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
+		public async Task UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
 		{
 			var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => a.IsDeleted == false && a.Id == articleUpdateDto.Id, x => x.Category);
+            var userEmail = _user.GetLoggedInEmail();
 
 
-			//TODO : AutoMapper hata verdi o yüzden tekrar bak!
-			article.Title = articleUpdateDto.Title;
+            //TODO : AutoMapper hata verdi o yüzden tekrar bak!
+            article.Title = articleUpdateDto.Title;
 			article.Content = articleUpdateDto.Content;
 			article.CategoryId = articleUpdateDto.CategoryId;
+			article.ModifiedBy = userEmail;
+			article.ModifiedDate = DateTime.Now;
 
 
 			await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
@@ -61,9 +73,11 @@ namespace MVCBlog.Service.Services.Concretes
 		public async Task SafeDeleteArticleAsync(Guid articleId)
 		{
             var article = await _unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+            var userEmail = _user.GetLoggedInEmail();
+
             article.IsDeleted = true;
 			article.DeletedDate = DateTime.Now;
-			article.DeletedBy = "WILLBEDEFINED";
+			article.DeletedBy = userEmail;
 
             await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
             await _unitOfWork.SaveAsync();

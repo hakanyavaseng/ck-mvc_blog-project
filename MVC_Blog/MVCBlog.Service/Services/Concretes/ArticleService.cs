@@ -61,6 +61,17 @@ namespace MVCBlog.Service.Services.Concretes
 			await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
 			await _unitOfWork.SaveAsync();
 		}
+
+		public async Task SafeDeleteArticleAsync(Guid articleId)
+		{
+            var article = await _unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+            article.IsDeleted = true;
+			article.DeletedDate = DateTime.Now;
+			article.DeletedBy = "WILLBEDEFINED";
+
+            await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
+            await _unitOfWork.SaveAsync();
+        }
 	}
 
 }

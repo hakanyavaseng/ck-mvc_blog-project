@@ -67,6 +67,13 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             return View(articleUpdateDto);
         }
 
+        public async Task<IActionResult> Delete(Guid articleId)
+        {
+            await _articleService.SafeDeleteArticleAsync(articleId);
+
+            return RedirectToAction("Index", "Article", new { Area = "Admin" });
+        }
+
     }
 
 }

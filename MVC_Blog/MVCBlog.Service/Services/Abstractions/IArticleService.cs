@@ -9,6 +9,7 @@ namespace MVCBlog.Service.Services.Abstractions
         Task CreateArticleAsync(ArticleAddDto articleAddDto);
         Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId);
         Task UpdateArticleAsync(ArticleUpdateDto articleUpdateDto);
+        Task SafeDeleteArticleAsync(Guid articleId);
 
     }
 }

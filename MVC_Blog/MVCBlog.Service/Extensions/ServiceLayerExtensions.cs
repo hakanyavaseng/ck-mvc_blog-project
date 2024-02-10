@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using MVCBlog.Service.FluentValidations;
 using MVCBlog.Service.Services.Abstractions;
 using MVCBlog.Service.Services.Concretes;
 using System.Reflection;
@@ -13,7 +16,19 @@ namespace MVCBlog.Service.Extensions
 			services.AddScoped<IArticleService, ArticleService>();
 			services.AddScoped<ICategoryService, CategoryService>();
 			services.AddAutoMapper(assembly);
-			return services;
+
+
+			//TODO : Refactor deprecated method with FluentValidation's document
+			services.AddControllersWithViews().AddFluentValidation(opt =>
+			{
+				opt.RegisterValidatorsFromAssemblyContaining<ArticleValidator>();
+				opt.DisableDataAnnotationsValidation = true;
+				opt.ValidatorOptions.LanguageManager.Culture = new System.Globalization.CultureInfo("tr"); // Error mesaages in Turkish
+			});
+
+          
+
+            return services;
 		}
 	}
 }

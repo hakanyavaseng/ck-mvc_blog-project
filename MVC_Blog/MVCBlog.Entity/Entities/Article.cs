@@ -5,9 +5,10 @@ namespace MVCBlog.Entity.Entities
 {
     public class Article : EntityBase
 	{
+       
         public string Title { get; set; }
         public string Content { get; set; }
-        public int ViewCount { get; set; }
+        public int ViewCount { get; set; } = 0;
 
         //Category
         public Guid CategoryId { get; set; } 
@@ -20,6 +21,22 @@ namespace MVCBlog.Entity.Entities
         //User
         public Guid AppUserId { get; set; }
         public AppUser User { get; set; }
+
+
+        //Entity Constructor
+        public Article()
+        {
+
+        }
+
+        public Article(string title, string content, Guid userId, Guid categoryId, Guid imageId)
+        {
+            Title = title;
+            Content = content;
+            AppUserId = userId;
+            CategoryId = categoryId;
+            ImageId = imageId;
+        }
 
     }
 }

@@ -42,7 +42,7 @@ namespace MVCBlog.Service.Services.Concretes
 			return map;
 		}
 
-		public async Task UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
+		public async Task<string> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
 		{
 			var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => a.IsDeleted == false && a.Id == articleUpdateDto.Id, x => x.Category);
 
@@ -55,6 +55,7 @@ namespace MVCBlog.Service.Services.Concretes
 
 			await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
 			await _unitOfWork.SaveAsync();
+
 		}
 
 		public async Task SafeDeleteArticleAsync(Guid articleId)

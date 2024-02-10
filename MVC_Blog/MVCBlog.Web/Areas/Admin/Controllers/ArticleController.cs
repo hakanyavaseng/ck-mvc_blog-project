@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlog.Entity.DTOs.Articles;
 using MVCBlog.Entity.Entities;
 using MVCBlog.Service.Services.Abstractions;
+using MVCBlog.Web.ResultMessages;
+using NToastNotify;
 
 namespace MVCBlog.Web.Areas.Admin.Controllers
 {
@@ -16,12 +18,14 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
         private readonly IValidator<Article> _validator;
-        public ArticleController(IArticleService articleService, ICategoryService categoryService, IMapper mapper, IValidator<Article> validator)
+        private readonly IToastNotification _toast;
+        public ArticleController(IArticleService articleService, ICategoryService categoryService, IMapper mapper, IValidator<Article> validator, IToastNotification toastNotification)
         {
             _articleService = articleService;
             _categoryService = categoryService;
             _mapper = mapper;
             _validator = validator;
+            _toast = toastNotification;
 
         }
         public async Task<IActionResult> Index()
@@ -34,7 +38,7 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Add()
         {
             var categories = await _categoryService.GetAllCategoriesNonDeleted();
-            return View(new ArticleAddDto { Categories = categories});
+            return View(new ArticleAddDto { Categories = categories });
         }
 
         [HttpPost]
@@ -43,15 +47,17 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             var map = _mapper.Map<Article>(articleAddDto);
             var result = await _validator.ValidateAsync(map);
 
-            if(result.IsValid)
+            if (result.IsValid)
             {
                 await _articleService.CreateArticleAsync(articleAddDto);
+                _toast.AddSuccessToastMessage(Messages.Article.AddSuccess);
                 return RedirectToAction("Index", "Article", new { Area = "Admin" });
             }
             else
             {
+                _toast.AddErrorToastMessage(Messages.Article.AddError);
                 result.AddToModelState(ModelState);
-              
+
             }
             var categories = await _categoryService.GetAllCategoriesNonDeleted();
             return View(new ArticleAddDto { Categories = categories });

@@ -39,6 +39,28 @@ namespace MVCBlog.Service.Services.Concretes
 			var map = _mapper.Map<List<ArticleDto>>(articles);
 			return map;
 		}
+
+		public async Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
+		{
+			var article = await _unitOfWork.GetRepository<Article>().GetAsync(a=>a.IsDeleted==false && a.Id==articleId,x=>x.Category);
+			var map = _mapper.Map<ArticleDto>(article);
+			return map;
+		}
+
+		public async Task UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
+		{
+			var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => a.IsDeleted == false && a.Id == articleUpdateDto.Id, x => x.Category);
+
+
+			//TODO : AutoMapper hata verdi o yüzden tekrar bak!
+			article.Title = articleUpdateDto.Title;
+			article.Content = articleUpdateDto.Content;
+			article.CategoryId = articleUpdateDto.CategoryId;
+
+
+			await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
+			await _unitOfWork.SaveAsync();
+		}
 	}
 
 }

@@ -9,5 +9,14 @@
             public static string UpdateSuccess { get => "Makale başarıyla güncellendi"; }
             public static string UpdateError { get => "Makale güncellenirken hata oluştu"; }
         }
+
+        public static class Category
+        {
+            public static string AddSuccess { get => "Kategori başarıyla eklendi"; }
+            public static string AddError { get => "Kategori eklenirken hata oluştu"; }
+            public static string UpdateSuccess { get => "Kategori başarıyla güncellendi"; }
+            public static string UpdateError { get => "Kategori güncellenirken hata oluştu"; }
+            public static string? DeleteSuccess { get => "Kategori başarıyla silindi"; }
+        }
     }
 }

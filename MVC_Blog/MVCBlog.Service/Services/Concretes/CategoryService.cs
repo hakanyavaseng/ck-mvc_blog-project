@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MVCBlog.Data.UnitOfWorks;
 using MVCBlog.Entity.DTOs.Categories;
 using MVCBlog.Entity.Entities;
+using MVCBlog.Service.Extensions;
 using MVCBlog.Service.Services.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,19 +18,71 @@ namespace MVCBlog.Service.Services.Concretes
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ClaimsPrincipal _user;
 
-        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-
+            _httpContextAccessor = httpContextAccessor;
+            _user = _httpContextAccessor.HttpContext.User;
         }
         public async Task<List<CategoryDto>> GetAllCategoriesNonDeleted()
         {
+         
             var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(Category => Category.IsDeleted == false);
             var mapped = _mapper.Map<List<CategoryDto>>(categories);
 
             return mapped;
+        }
+
+        public async Task AddCategory(CategoryAddDto categoryAddDto)
+        {
+
+            //TODO Mapper ile tekrardan düzenlenecek!
+            //var userId = _user.GetLoggedInUserId();
+            var userEmail = _user.GetLoggedInEmail();
+
+            Category category = new Category(categoryAddDto.Name, userEmail);
+
+            await _unitOfWork.GetRepository<Category>().AddAsync(category);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<CategoryDto> GetCategoryById(Guid categoryId)
+        {
+            var category = await _unitOfWork.GetRepository<Category>().GetByGuidAsync(categoryId);
+            var mapped = _mapper.Map<CategoryDto>(category);
+            return mapped; 
+
+        }
+
+        public async Task UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto)
+        {
+            var category = await _unitOfWork.GetRepository<Category>().GetByGuidAsync(categoryUpdateDto.Id);
+            var userEmail = _user.GetLoggedInEmail();
+
+            category.Name = categoryUpdateDto.Name;
+            category.ModifiedBy = userEmail;
+            category.ModifiedDate = DateTime.Now;
+
+            await _unitOfWork.GetRepository<Category>().UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+
+        }
+
+        public async Task SafeDeleteCategory(Guid categoryId)
+        {
+            var userEmail = _user.GetLoggedInEmail();
+
+            var category = await _unitOfWork.GetRepository<Category>().GetByGuidAsync(categoryId);
+            category.IsDeleted = true;
+            category.DeletedDate = DateTime.Now;
+            category.DeletedBy = userEmail;
+
+            await _unitOfWork.GetRepository<Category>().UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

@@ -9,6 +9,10 @@ namespace MVCBlog.Service.Services.Abstractions
 {
     public interface ICategoryService
     {
-        public Task<List<CategoryDto>> GetAllCategoriesNonDeleted();
+        Task<List<CategoryDto>> GetAllCategoriesNonDeleted();
+        Task AddCategory(CategoryAddDto categoryAddDto);
+        Task<CategoryDto> GetCategoryById(Guid categoryId);
+        Task UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto);
+        Task SafeDeleteCategory(Guid categoryId);
     }
 }

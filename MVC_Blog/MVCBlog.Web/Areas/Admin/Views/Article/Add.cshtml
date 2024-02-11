@@ -16,11 +16,11 @@
                     <div class="card-body">
 
                         <div class="form-group">
-                           <label asp-for="CategoryId">Kategori</label>
-                           <select id="categoryList" class="form-control" asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
-                               <span asp-validation-for="CategoryId"></span>
-                           <span asp-validation-for="CategoryId" class="text-danger"></span>
-                       </select>
+                            <label asp-for="CategoryId">Kategori</label>
+                            <select id="categoryList" class="form-control" asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
+                                <span asp-validation-for="CategoryId"></span>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -38,8 +38,16 @@
                         </div>
 
                         <div class="form-group">
+                            <label asp-for="Photo" id="defaultFormControlInput" class="form-label mb-3">Yüklenecek fotoğrafı seçiniz</label>
+                            <input asp-for="Photo" type="file" accept="image/*" class="form-control mb-3" id="defaultFormControlInput"  aria-describedby="defaultFormControlHelp">
+                            <span asp-validation-for="Photo"></span>
+                        </div>
+
+
+
+                        <div class="form-group">
                             <button type="submit" class="btn btn-primary btnblock">Kaydet</button>
-                      
+
                         </div>
 
                     </div>

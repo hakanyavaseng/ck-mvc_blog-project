@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MVCBlog.Service.FluentValidations;
+using MVCBlog.Service.Helpers.Images;
 using MVCBlog.Service.Services.Abstractions;
 using MVCBlog.Service.Services.Concretes;
 using System.Reflection;
@@ -29,6 +30,9 @@ namespace MVCBlog.Service.Extensions
 
 			//It is used to get the logged in user's information
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+			//ImageHelper
+			services.AddScoped<IImageHelper, ImageHelper>();
           
 
 

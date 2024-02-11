@@ -1,10 +1,5 @@
-﻿using MVCBlog.Entity.DTOs.Categories;
-using MVCBlog.Entity.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using MVCBlog.Entity.DTOs.Categories;
 
 namespace MVCBlog.Entity.DTOs.Articles
 {
@@ -12,6 +7,7 @@ namespace MVCBlog.Entity.DTOs.Articles
     {
         public string Title { get; set; }
         public string Content { get; set; }
+        public IFormFile Photo { get; set; }
         public Guid CategoryId { get; set; }
         public IList<CategoryDto> Categories { get; set; }
     }

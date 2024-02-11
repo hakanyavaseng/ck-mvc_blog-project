@@ -69,6 +69,7 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             var article = await _articleService.GetArticleWithCategoryNonDeletedAsync(articleId);
             var categories = await _categoryService.GetAllCategoriesNonDeleted();
 
+
             var articleUpdateDto = _mapper.Map<ArticleUpdateDto>(article);
             articleUpdateDto.Categories = categories;
 

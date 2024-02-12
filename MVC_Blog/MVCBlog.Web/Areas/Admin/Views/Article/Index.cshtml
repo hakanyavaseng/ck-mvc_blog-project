@@ -9,8 +9,14 @@
     <div class="card">
         <div class="table-responsive text-nowrap m-5">
 
-            <a class="btn btn-success mb-3" asp-area="Admin" asp-controller="Article" asp-action="Add">Yeni Makale Ekle<i class="bx bx-plus"></i></a>
+            @{
+                @if(User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-success mb-3" asp-area="Admin" asp-controller="Article" asp-action="Add">Yeni Makale Ekle<i class="bx bx-plus"></i></a>
+                }
+            }
 
+           
             <table class="table table-bordered" id="articlesTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -19,7 +25,13 @@
                         <th>Oluşturulma Tarihi</th>
                         <th>Oluşturan</th>
                         <th>Durum</th>
-                        <th>İşlemler</th>
+                        @{
+                            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                            {
+                                <th>İşlemler</th>
+                            }
+                        }
+
 
                     </tr>
                 </thead>
@@ -30,7 +42,13 @@
                         <th>Oluşturulma Tarihi</th>
                         <th>Oluşturan</th>
                         <th>Durum</th>
-                        <th>İşlemler</th>
+                        @{
+                            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                            {
+                                <th>İşlemler</th>
+                            }
+                        }
+                       
 
                     </tr>
                 </tfoot>
@@ -43,10 +61,18 @@
                             <td>@article.CreatedDate.ToShortDateString()</td>
                             <td>@article.CreatedBy</td>
                             <td>@(article.IsDeleted ? "Aktif Değil" : "Aktif")</td>
-                            <td>
-                                <a class="btn btn-primary btn-sm" data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Update" asp-route-articleId="@article.Id"><i class="bx bxs-edit"></i></a>
-                                <a class="btn btn-danger btn-sm" data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Delete" asp-route-articleId="@article.Id"><i class="bx bxs-minus-circle"></i></a>
-                            </td>
+
+                            @{
+                                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Update" asp-route-articleId="@article.Id"><i class="bx bxs-edit"></i></a>
+                                        <a class="btn btn-danger btn-sm" data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Delete" asp-route-articleId="@article.Id"><i class="bx bxs-minus-circle"></i></a>
+                                    </td>
+                                }
+                            }
+                            
+                           
 
                         </tr>
                     }

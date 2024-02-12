@@ -56,6 +56,25 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddWithAjax([FromBody] CategoryAddDto categoryAddDto)
+        {
+            var map = _mapper.Map<Category>(categoryAddDto);
+            var result = await _validator.ValidateAsync(map);
+
+            if (result.IsValid)
+            {
+                await _categoryService.AddCategory(categoryAddDto);
+                _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.Category.AddSuccess);
+                return Json(ResultMessages.Messages.Category.AddSuccess);
+            }
+            else
+            {
+                result.AddToModelState(ModelState);
+                return Json(ResultMessages.Messages.Category.AddError);
+            }            
+        }
+
         [HttpGet]
         public async Task<IActionResult> Update(Guid categoryId)
         {

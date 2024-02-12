@@ -81,5 +81,83 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             return View(userAddDto);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var roles = await _roleManager.Roles.ToListAsync();
+            var map = _mapper.Map<UserUpdateDto>(user);
+            map.Roles = roles;
+
+
+            return View(map);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UserUpdateDto userUpdateDto)
+        {
+            var user = await _userManager.FindByIdAsync(userUpdateDto.Id.ToString());
+            
+            if(user != null)
+            {
+                var userRole = await _userManager.GetRolesAsync(user);
+                var roles = await _roleManager.Roles.ToListAsync();
+                if(ModelState.IsValid)
+                {
+                    _mapper.Map(userUpdateDto, user);
+                    user.UserName = userUpdateDto.Email;
+                    user.SecurityStamp = Guid.NewGuid().ToString();
+                    var result = await _userManager.UpdateAsync(user);
+
+                    if(result.Succeeded)
+                    {
+                        await _userManager.RemoveFromRolesAsync(user, userRole);
+                        var role = await _roleManager.FindByIdAsync(userUpdateDto.RoleId.ToString());
+                        await _userManager.AddToRoleAsync(user, role.Name);
+                        _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.User.UpdateSuccess);
+                        return RedirectToAction("Index", "User", new { area = "Admin" });
+                    }
+                    else
+                    {
+                        _toastNotification.AddErrorToastMessage(ResultMessages.Messages.User.UpdateError);
+                        foreach (var e in result.Errors)
+                        {
+                            ModelState.AddModelError("", e.Description);
+                        }
+                        return View(userUpdateDto);
+
+                    }
+                }
+            }
+            return NotFound();
+
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if(user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                if(result.Succeeded)
+                {
+                    _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.User.DeleteSuccess);
+                    return RedirectToAction("Index", "User", new { area = "Admin" });
+                }
+                else
+                {
+                    _toastNotification.AddErrorToastMessage(ResultMessages.Messages.User.DeleteError);
+                    foreach (var e in result.Errors)
+                    {
+                        ModelState.AddModelError("", e.Description);
+                    }
+                    return View();
+                }
+            }
+            return NotFound();
+        }
+
     }
 }

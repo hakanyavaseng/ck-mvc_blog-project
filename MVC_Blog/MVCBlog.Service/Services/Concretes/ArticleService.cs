@@ -97,6 +97,27 @@ namespace MVCBlog.Service.Services.Concretes
             await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
             await _unitOfWork.SaveAsync();
         }
+
+        public async Task<List<ArticleDto>> GetAllArticlesWithCategoryDeletedAsync()
+        {
+            var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(a => a.IsDeleted == true, x => x.Category);
+            var map = _mapper.Map<List<ArticleDto>>(articles);
+            return map;
+        }
+
+        public async Task UndoDeleteArticleAsync(Guid articleId)
+        {
+            var article = await _unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+
+            article.IsDeleted = false;
+            article.DeletedDate = null;
+            article.DeletedBy = null;
+
+            await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
+            await _unitOfWork.SaveAsync();
+        }
+
+        
     }
 
 }

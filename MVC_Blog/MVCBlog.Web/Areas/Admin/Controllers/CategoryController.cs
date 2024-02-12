@@ -111,5 +111,20 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.Category.DeleteSuccess);
             return RedirectToAction("Index", "Category", new { Area = "Admin" });
         }
+
+        public async Task<IActionResult> DeletedCategories()
+        {
+            var categories = await _categoryService.GetAllCategoriesDeleted();
+            return View(categories);
+        }
+
+        public async Task<IActionResult> UndoDelete(Guid categoryId)
+        {
+            await _categoryService.UndoDeleteCategoryAsync(categoryId);
+            _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.Category.UndoDeleteSuccess);
+            return RedirectToAction("Index", "Category", new { Area = "Admin" });
+        }
+
+
     }
 }

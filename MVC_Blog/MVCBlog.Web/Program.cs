@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using MVCBlog.Data.Contexts;
 using MVCBlog.Data.Extensions;
 using MVCBlog.Entity.Entities.Identity;
+using MVCBlog.Service.Describers;
 using MVCBlog.Service.Extensions;
 using NToastNotify;
 
@@ -27,7 +28,8 @@ builder.Services
 	})
 	.AddRoleManager<RoleManager<AppRole>>()
 	.AddEntityFrameworkStores<AppDbContext>()
-	.AddDefaultTokenProviders();
+	.AddDefaultTokenProviders()
+	.AddErrorDescriber<CustomIdentityErrorDescriber>();
 #endregion
 
 #region Cookie Settings

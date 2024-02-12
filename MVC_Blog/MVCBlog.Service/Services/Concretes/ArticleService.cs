@@ -73,9 +73,10 @@ namespace MVCBlog.Service.Services.Concretes
 
 
             //TODO : AutoMapper hata verdi o yüzden tekrar bak!
-            article.Title = articleUpdateDto.Title;
-            article.Content = articleUpdateDto.Content;
-            article.CategoryId = articleUpdateDto.CategoryId;
+            _mapper.Map(articleUpdateDto, article);
+            //article.Title = articleUpdateDto.Title;
+            //article.Content = articleUpdateDto.Content;
+            //article.CategoryId = articleUpdateDto.CategoryId;
             article.ModifiedBy = userEmail;
             article.ModifiedDate = DateTime.Now;
 

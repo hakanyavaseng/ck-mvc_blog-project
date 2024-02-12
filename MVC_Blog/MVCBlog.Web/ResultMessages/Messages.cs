@@ -26,6 +26,8 @@
             public static string UpdateSuccess { get => "Kullanıcı başarıyla güncellendi"; }
             public static string UpdateError { get => "Kullanıcı güncellenirken hata oluştu"; }
             public static string DeleteSuccess { get => "Kullanıcı başarıyla silindi"; }
+            public static string DeleteError { get => "Kullanıcı silinirken hata oluştu"; }
+
         }
     }
 }

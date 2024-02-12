@@ -65,6 +65,13 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home", new {Area = ""});
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
 
     }
 }

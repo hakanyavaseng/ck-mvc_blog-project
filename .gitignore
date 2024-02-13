@@ -397,3 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /MVC_Blog/MVCBlog.Web/wwwroot/sneat
+/MVC_Blog/MVCBlog.Web/wwwroot/stand-blog

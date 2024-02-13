@@ -97,14 +97,12 @@ namespace MVCBlog.Service.Services.Concretes
             await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
             await _unitOfWork.SaveAsync();
         }
-
         public async Task<List<ArticleDto>> GetAllArticlesWithCategoryDeletedAsync()
         {
             var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(a => a.IsDeleted == true, x => x.Category);
             var map = _mapper.Map<List<ArticleDto>>(articles);
             return map;
         }
-
         public async Task UndoDeleteArticleAsync(Guid articleId)
         {
             var article = await _unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
@@ -117,7 +115,33 @@ namespace MVCBlog.Service.Services.Concretes
             await _unitOfWork.SaveAsync();
         }
 
-        
+        //UI
+        public async Task<ArticleListDto> GetAllByPagingAsync(Guid? categoryId, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+        {
+            pageSize = pageSize > 20 ? 20 : pageSize;
+
+            var articles = categoryId == null
+                ? await _unitOfWork.GetRepository<Article>().GetAllAsync(a => a.IsDeleted == false, c => c.Category, i => i.Image)
+                : await _unitOfWork.GetRepository<Article>().GetAllAsync(a => a.IsDeleted == false && a.CategoryId == categoryId, c => c.Category, i => i.Image);
+
+            var sortedArticles = isAscending
+                ? articles.OrderBy(x => x.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList()
+                : articles.OrderByDescending(x => x.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+
+            return new ArticleListDto
+            {
+                Articles = sortedArticles,
+                CategoryId = categoryId,
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                IsAscending = isAscending,
+                TotalCount = sortedArticles.Count()
+            };
+
+
+        }
+
+
     }
 
 }

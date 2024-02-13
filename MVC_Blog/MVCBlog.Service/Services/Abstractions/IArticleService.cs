@@ -13,7 +13,6 @@ namespace MVCBlog.Service.Services.Abstractions
         Task SafeDeleteArticleAsync(Guid articleId);
         Task UndoDeleteArticleAsync(Guid articleId);
 
-
     }
 }
 

@@ -5,12 +5,7 @@ using MVCBlog.Entity.DTOs.Categories;
 using MVCBlog.Entity.Entities;
 using MVCBlog.Service.Extensions;
 using MVCBlog.Service.Services.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCBlog.Service.Services.Concretes
 {

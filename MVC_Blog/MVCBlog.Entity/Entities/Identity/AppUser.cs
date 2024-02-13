@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using MVCBlog.Core.Entities;
 
 namespace MVCBlog.Entity.Entities.Identity
 {

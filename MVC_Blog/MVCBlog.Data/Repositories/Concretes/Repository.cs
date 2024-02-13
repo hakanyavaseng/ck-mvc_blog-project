@@ -21,7 +21,13 @@ namespace MVCBlog.Data.Repositories.Concretes
 		//Task = void, Task is used for async methods
 		public async Task AddAsync(T entity) => await Table.AddAsync(entity);
 		public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate) => await Table.AnyAsync(predicate);
-		public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null) => await Table.CountAsync(predicate);
+		public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
+		{
+			if(predicate is not  null)
+				return await Table.CountAsync(predicate);
+			return await Table.CountAsync();
+
+		}
 		public async Task DeleteAsync(T entity)
 		{
 			await Task.Run(() => Table.Remove(entity));

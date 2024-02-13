@@ -5,6 +5,7 @@ namespace MVCBlog.Service.Services.Abstractions
 {
     public interface IArticleService
     {
+        
         Task<List<ArticleDto>> GetAllArticlesWithCategoryNonDeletedAsync();
         Task<List<ArticleDto>> GetAllArticlesWithCategoryDeletedAsync();
         Task CreateArticleAsync(ArticleAddDto articleAddDto);
@@ -12,6 +13,9 @@ namespace MVCBlog.Service.Services.Abstractions
         Task UpdateArticleAsync(ArticleUpdateDto articleUpdateDto);
         Task SafeDeleteArticleAsync(Guid articleId);
         Task UndoDeleteArticleAsync(Guid articleId);
+
+
+
 
     }
 }

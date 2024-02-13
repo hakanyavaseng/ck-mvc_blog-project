@@ -3,9 +3,12 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MVCBlog.Data.UnitOfWorks;
 using MVCBlog.Entity.DTOs.Users;
+using MVCBlog.Entity.Entities;
 using MVCBlog.Entity.Entities.Identity;
 using MVCBlog.Service.Extensions;
+using MVCBlog.Service.Helpers.Images;
 using MVCBlog.Web.ResultMessages;
 using NToastNotify;
 using System.ComponentModel.DataAnnotations;
@@ -21,13 +24,19 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IToastNotification _toastNotification;
         private readonly IValidator<AppUser> _validator;
-        public UserController(UserManager<AppUser> userManager, IMapper mapper, RoleManager<AppRole> roleManager, IToastNotification toastNotification, IValidator<AppUser> validator)
+        private readonly SignInManager<AppUser> _signInManager; 
+        private readonly IImageHelper _imageHelper;
+        private readonly IUnitOfWork _unitOfWork;
+        public UserController(UserManager<AppUser> userManager, IMapper mapper, RoleManager<AppRole> roleManager, IToastNotification toastNotification, IValidator<AppUser> validator, SignInManager<AppUser> signInManager, IImageHelper imageHelper, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _mapper = mapper;
             _roleManager = roleManager;
             _toastNotification = toastNotification;
             _validator = validator;
+            _signInManager = signInManager;
+            _imageHelper = imageHelper;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -167,6 +176,92 @@ namespace MVCBlog.Web.Areas.Admin.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            UserProfileDto userProfileDto = _mapper.Map<UserProfileDto>(user);
+            if (user.ImageId != Guid.Empty)
+            {
+                Image image = await _unitOfWork.GetRepository<Image>().GetAsync(i => i.Id == user.ImageId);
+                userProfileDto.Image.FileName = image.FileName;
+            }
+         
+            
+
+            return View(userProfileDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(UserProfileDto userProfileDto)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (ModelState.IsValid)
+            {
+                var isVerified = await _userManager.CheckPasswordAsync(user, userProfileDto.CurrentPassword);
+                if (isVerified && userProfileDto.NewPassword != null && userProfileDto.Photo != null)
+                {
+                   IdentityResult result= await _userManager.ChangePasswordAsync(user, userProfileDto.CurrentPassword, userProfileDto.NewPassword);
+                    if (result.Succeeded)
+                    {
+
+                        await _userManager.UpdateSecurityStampAsync(user);
+                        await _signInManager.SignOutAsync();
+                        await _signInManager.PasswordSignInAsync(user, userProfileDto.NewPassword, true, false);
+                        _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.User.ChangePasswordSuccess);
+
+                        user.FirstName = userProfileDto.FirstName;
+                        user.LastName = userProfileDto.LastName;
+                        user.PhoneNumber = userProfileDto.PhoneNumber;
+
+                        var imageUpload = await _imageHelper.Upload($"{userProfileDto.FirstName}{userProfileDto.LastName}", userProfileDto.Photo, Entity.Enums.ImageType.User);
+                        Image image = new(imageUpload.FullName, userProfileDto.Photo.ContentType, user.Email);
+                        await _unitOfWork.GetRepository<Image>().AddAsync(image);
+
+                        user.ImageId = image.Id;
+
+                        await _userManager.UpdateAsync(user);
+
+                        await _unitOfWork.SaveAsync();
+
+                        return RedirectToAction("Profile", "User", new { Area = "Admin" });
+                    }
+                    else
+                    {
+                        result.AddToIdentityModelState(ModelState);
+                        return View();
+                    }
+
+                }
+                else if (isVerified)
+                {
+                    user.FirstName = userProfileDto.FirstName;
+                    user.LastName = userProfileDto.LastName;
+                    user.PhoneNumber = userProfileDto.PhoneNumber;
+                    _toastNotification.AddSuccessToastMessage(ResultMessages.Messages.User.UpdateSuccess);
+
+                    await _userManager.UpdateAsync(user);
+
+                    return RedirectToAction("Profile", "User", new { Area = "Admin" });
+
+                }
+              
+                else
+                {
+                    _toastNotification.AddErrorToastMessage(ResultMessages.Messages.User.UpdateError);
+                    return View();
+                }
+                
+
+
+            }
+
+            return View();
+         
+        }
+
 
     }
 }

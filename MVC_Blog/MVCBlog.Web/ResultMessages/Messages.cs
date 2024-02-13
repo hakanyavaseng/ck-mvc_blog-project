@@ -39,6 +39,10 @@
             public static string DeleteSuccess { get => "Kullanıcı başarıyla silindi"; }
             public static string DeleteError { get => "Kullanıcı silinirken hata oluştu"; }
 
+            public static string ChangePasswordSuccess { get => "Şifreniz başarıyla değiştirildi."; }
+            public static string ChangePasswordError { get => "Şifreniz değiştirilirken hata oluştu."; }
+
+
         }
     }
 }

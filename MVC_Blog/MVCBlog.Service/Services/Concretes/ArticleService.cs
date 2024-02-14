@@ -137,7 +137,26 @@ namespace MVCBlog.Service.Services.Concretes
             };
         }
 
+        public async Task<ArticleListDto> SearchAsync(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+        {
+            pageSize = pageSize > 20 ? 20 : pageSize;
+           
+            var articles = await _unitOfWork.GetRepository<Article>()
+                .GetAllAsync(a => a.IsDeleted == false && (a.Title.Contains(keyword) || a.Content.Contains(keyword)),a=>a.Category, i=>i.Image,u=>u.User);
+            
+            var sortedArticles = isAscending
+                ? articles.OrderBy(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList()
+                : articles.OrderByDescending(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 
+            return new ArticleListDto
+            {
+                Articles = sortedArticles,
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                TotalCount = articles.Count,
+                IsAscending = isAscending
+            };
+        }
     }
 
 }

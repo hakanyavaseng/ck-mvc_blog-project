@@ -17,6 +17,7 @@ namespace MVCBlog.Web.Controllers
 			_articleService = articleService;
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> Index(Guid? categoryId, int currentPage = 1, int pageSize = 3, bool isAscending = false)
 		{
 			var articles = await _articleService.GetAllByPagingAsync(categoryId, currentPage, pageSize, isAscending);
@@ -24,7 +25,20 @@ namespace MVCBlog.Web.Controllers
 			return View(articles);
 		}
 
-		public IActionResult Privacy()
+        [HttpGet]
+        public async Task<IActionResult> Search(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+        {
+            var articles = await _articleService.SearchAsync(keyword, currentPage, pageSize, isAscending);
+
+            return View(articles);
+        }
+
+
+
+
+
+
+        public IActionResult Privacy()
 		{
 			return View();
 		}
@@ -34,5 +48,7 @@ namespace MVCBlog.Web.Controllers
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
-	}
+
+		
+    }
 }

@@ -22,9 +22,8 @@ I followed <b><a href="https://www.youtube.com/watch?v=Lpo0avv3g-Q&list=PLrSCwxk
 </div>
   
 ## 	:camera_flash: Screenshots
-
-<a><img src="https://i.ibb.co/k6yTwSr/Screenshot-2024-02-14-144722.png"></a>
 <a><img src="https://i.ibb.co/WVNJn4W/Screenshot-2024-02-14-145526.png"></a>
+<a><img src="https://i.ibb.co/k6yTwSr/Screenshot-2024-02-14-144722.png"></a>
 <a><img src="https://i.ibb.co/DthfpSv/Screenshot-2024-02-14-145612.png"></a>
 <a><img src="https://i.ibb.co/MDn3HWd/Screenshot-2024-02-14-145634.png"></a>
 <a><img src="https://i.ibb.co/G2WypwC/Screenshot-2024-02-14-145702.png"></a>

@@ -101,5 +101,16 @@ namespace MVCBlog.Service.Services.Concretes
             await _unitOfWork.GetRepository<Category>().UpdateAsync(category);
             await _unitOfWork.SaveAsync();
         }
+
+        //UI
+        public async Task<List<CategoryDto>> GetAllCategoriesTake24()
+        {
+            var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(Category => Category.IsDeleted == false);
+            var mapped = _mapper.Map<List<CategoryDto>>(categories);
+          
+
+
+            return mapped.Take(24).ToList();
+        }
     }
 }

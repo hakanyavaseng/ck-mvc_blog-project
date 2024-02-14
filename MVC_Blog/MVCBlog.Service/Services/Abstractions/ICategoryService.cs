@@ -18,5 +18,8 @@ namespace MVCBlog.Service.Services.Abstractions
         Task<List<CategoryDto>> GetAllCategoriesDeleted();
         Task UndoDeleteCategoryAsync(Guid categoryId);
 
+        //UI
+        Task<List<CategoryDto>> GetAllCategoriesTake24();
+
     }
 }

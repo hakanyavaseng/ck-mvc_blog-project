@@ -13,5 +13,7 @@ namespace MVCBlog.Entity.DTOs.Users
         public string? NewPassword { get; set; }
         public IFormFile? Photo { get; set; }
         public Image Image { get; set; }
+        public string Role { get; set; }
+
     }
 }

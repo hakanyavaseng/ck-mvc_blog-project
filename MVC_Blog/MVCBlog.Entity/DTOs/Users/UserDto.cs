@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MVCBlog.Entity.DTOs.Users
+﻿namespace MVCBlog.Entity.DTOs.Users
 {
     public class UserDto
     {
@@ -16,5 +10,6 @@ namespace MVCBlog.Entity.DTOs.Users
         public string PhoneNumber { get; set; }
         public int AccessFailedCount { get; set; }
         public string Role { get; set; }
+
     }
 }

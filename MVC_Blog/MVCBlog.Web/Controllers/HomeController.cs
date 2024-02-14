@@ -33,8 +33,11 @@ namespace MVCBlog.Web.Controllers
             return View(articles);
         }
 
-
-
+		public async Task<IActionResult> Detail(Guid id)
+		{
+			var article = await _articleService.GetArticleWithCategoryNonDeletedAsync(id);
+			return View(article);
+		}
 
 
 

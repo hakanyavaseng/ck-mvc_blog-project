@@ -6,9 +6,9 @@ I followed <b><a href="https://www.youtube.com/watch?v=Lpo0avv3g-Q&list=PLrSCwxk
 ## :computer:	Technologies
 
 <div>
-  <b>Backend<b> : ASP.Net Core 6 MVC </br>
-  <b>ORM<b>: Entity Framework 6 </br>
-  <b>Architecture<b>: Layered Architecture</br>
+  <b>Backend</b> : ASP.Net Core 6 MVC </br>
+  <b>ORM</b>: Entity Framework 6 </br>
+  <b>Architecture</b>: Layered Architecture</br>
   <b><a>Others:</a></b>
   <ul>
     <li>Generic Repository Design Pattern </li>

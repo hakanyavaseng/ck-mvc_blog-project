@@ -11,10 +11,10 @@
                             {
                                 <div class="blog-post">
                                     <div class="blog-thumb">
-                                        <img src="~/images/article-images/sasdfgsdfgdsfgdfs_621.webp" alt="" width="700" height="300">
+                                        <img src="~/images/@article.Image.FileName" alt="" width="700" height="300">
                                     </div>
                                     <div class="down-content">
-                                        <a href="post-details.html"><h4>@article.Title</h4></a>
+                                        <a asp-controller="Home" asp-action="Detail" asp-route-id="@article.Id"><h4>@article.Title</h4></a>
                                         <ul class="post-info">
                                             <li><a href="#">@article.User.FirstName @article.User.LastName</a></li>
                                             <li><a href="#">@article.CreatedDate.ToString("dd/MM/yyyy")</a></li>
@@ -22,7 +22,7 @@
                                         </ul>
                                         <p>
                                             @(article.Content.Length > 200 ? @article.Content.Substring(0, 280) : article.Content)
-                                            <br /><a href="#">Devamını Oku...</a>
+                                            <br /><a asp-controller="Home" asp-action="Detail" asp-route-id="@article.Id">Devamını Oku...</a>
                                         </p>
                                         <div class="post-options">
                                             <div class="row">

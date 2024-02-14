@@ -1,5 +1,6 @@
 ﻿using MVCBlog.Entity.DTOs.Categories;
 using MVCBlog.Entity.Entities;
+using MVCBlog.Entity.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,9 @@ namespace MVCBlog.Entity.DTOs.Articles
         public string Content { get; set; }
         public CategoryDto Category { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public  int  ViewCount { get; set; }
+        public AppUser User { get; set; }
 
         public Image Image { get; set; }
         public string CreatedBy { get; set; }

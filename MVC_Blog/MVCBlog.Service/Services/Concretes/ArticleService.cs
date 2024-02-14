@@ -51,7 +51,7 @@ namespace MVCBlog.Service.Services.Concretes
         }
         public async Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
         {
-            var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => a.IsDeleted == false && a.Id == articleId, x => x.Category, i => i.Image);
+            var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => a.IsDeleted == false && a.Id == articleId, x => x.Category, i => i.Image, u => u.User);
 
             var map = _mapper.Map<ArticleDto>(article);
             return map;
@@ -136,7 +136,6 @@ namespace MVCBlog.Service.Services.Concretes
                 IsAscending = isAscending
             };
         }
-
         public async Task<ArticleListDto> SearchAsync(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
         {
             pageSize = pageSize > 20 ? 20 : pageSize;
@@ -157,6 +156,7 @@ namespace MVCBlog.Service.Services.Concretes
                 IsAscending = isAscending
             };
         }
+
     }
 
 }

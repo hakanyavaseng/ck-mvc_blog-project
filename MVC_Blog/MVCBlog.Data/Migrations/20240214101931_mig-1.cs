@@ -64,6 +64,20 @@ namespace MVCBlog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Visitors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visitors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -91,7 +105,7 @@ namespace MVCBlog.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -114,8 +128,7 @@ namespace MVCBlog.Data.Migrations
                         name: "FK_AspNetUsers_Images_ImageId",
                         column: x => x.ImageId,
                         principalTable: "Images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -244,14 +257,38 @@ namespace MVCBlog.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ArticleVisitors",
+                columns: table => new
+                {
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VisitorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArticleVisitors", x => new { x.ArticleId, x.VisitorId });
+                    table.ForeignKey(
+                        name: "FK_ArticleVisitors_Articles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "Articles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ArticleVisitors_Visitors_VisitorId",
+                        column: x => x.VisitorId,
+                        principalTable: "Visitors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("903e68e3-c5be-429a-8ccc-50699a0f8bae"), "b8eb114d-e178-45dd-97c1-8ac270bfbe00", "Admin", "ADMIN" },
-                    { new Guid("930fe77e-f06f-4fa1-a1e1-1be271ce4990"), "913e8626-f238-4757-8e6a-221760205101", "SuperAdmin", "SUPERADMIN" },
-                    { new Guid("d6923b5b-f0d9-4c40-b05c-b0257dd24d76"), "7926451c-c8d1-4efd-90ef-f694ffc0de03", "User", "USER" }
+                    { new Guid("903e68e3-c5be-429a-8ccc-50699a0f8bae"), "bfc2d312-4c30-4e63-a4f2-55ce0e42e9f3", "Admin", "ADMIN" },
+                    { new Guid("930fe77e-f06f-4fa1-a1e1-1be271ce4990"), "7206b6e6-7a4f-42f0-a870-d99ab80c2b36", "SuperAdmin", "SUPERADMIN" },
+                    { new Guid("d6923b5b-f0d9-4c40-b05c-b0257dd24d76"), "64e33b52-f8b3-43ba-9466-b50e156fa496", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -259,8 +296,8 @@ namespace MVCBlog.Data.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "IsDeleted", "ModifiedBy", "ModifiedDate", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("e5129fa7-7cb3-421a-b6b8-de983725a187"), "Admin", new DateTime(2024, 2, 9, 16, 56, 14, 846, DateTimeKind.Local).AddTicks(5557), null, null, false, null, null, "ASP.Net Core" },
-                    { new Guid("efaf03fc-92eb-45d7-8980-7c75d5a5ea8c"), "Admin", new DateTime(2024, 2, 9, 16, 56, 14, 846, DateTimeKind.Local).AddTicks(5560), null, null, false, null, null, "Entity Framework" }
+                    { new Guid("e5129fa7-7cb3-421a-b6b8-de983725a187"), "Admin", new DateTime(2024, 2, 14, 13, 19, 30, 825, DateTimeKind.Local).AddTicks(4841), null, null, false, null, null, "ASP.Net Core" },
+                    { new Guid("efaf03fc-92eb-45d7-8980-7c75d5a5ea8c"), "Admin", new DateTime(2024, 2, 14, 13, 19, 30, 825, DateTimeKind.Local).AddTicks(4844), null, null, false, null, null, "Entity Framework" }
                 });
 
             migrationBuilder.InsertData(
@@ -268,27 +305,27 @@ namespace MVCBlog.Data.Migrations
                 columns: new[] { "Id", "AppUserId", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "FileName", "FileType", "IsDeleted", "ModifiedBy", "ModifiedDate" },
                 values: new object[,]
                 {
-                    { new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"), new Guid("00000000-0000-0000-0000-000000000000"), "Admin", new DateTime(2024, 2, 9, 16, 56, 14, 849, DateTimeKind.Local).AddTicks(7298), null, null, "entityframework.jpg", "image/jpeg", false, null, null },
-                    { new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"), new Guid("00000000-0000-0000-0000-000000000000"), "Admin", new DateTime(2024, 2, 9, 16, 56, 14, 849, DateTimeKind.Local).AddTicks(7295), null, null, "aspnetcore.jpg", "image/jpeg", false, null, null }
+                    { new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"), new Guid("00000000-0000-0000-0000-000000000000"), "Admin", new DateTime(2024, 2, 14, 13, 19, 30, 828, DateTimeKind.Local).AddTicks(6508), null, null, "entityframework.jpg", "image/jpeg", false, null, null },
+                    { new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"), new Guid("00000000-0000-0000-0000-000000000000"), "Admin", new DateTime(2024, 2, 14, 13, 19, 30, 828, DateTimeKind.Local).AddTicks(6505), null, null, "aspnetcore.jpg", "image/jpeg", false, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageId", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("7893082f-7266-41f5-8e2c-d89989ee60d0"), 0, "d0fd9fd8-595b-4f32-a2aa-d0205be01395", "superadmin@gmail.com", true, "Hakan", new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"), "Yavaş", false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEEoZm/Z5Ndo+kWL91LdBawAPQM/WtGIEZWVkWRe6xoCt+jxzxjkjvuypfZqGv3RFMw==", "+905400000000", true, "72197772-00a3-4c77-9f1e-beecd58b7295", false, "superadmin@gmail.com" });
+                values: new object[] { new Guid("7893082f-7266-41f5-8e2c-d89989ee60d0"), 0, "c28b3ac3-d764-4dcd-810b-4caf0b9ae2d5", "superadmin@gmail.com", true, "Hakan", new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"), "Yavaş", false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEFQXxLQkRbUwVwuRjL4fRipnVcOXAL38FR9oZxsPu5SY0PIOYcxDgrhgsKslwuYU3g==", "+905400000000", true, "482bcae5-f49a-496b-a581-4056146e8239", false, "superadmin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageId", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("84ccaf88-5507-4dbf-8ddd-8f607db51f0a"), 0, "988a8a85-9a21-4a13-822b-7c7852024299", "admin@gmail.com", true, "Alperen", new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"), "Güneş", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEMxJevC8TCdkoFMBWzYo27NQ+3GK2kDtJWKHDeXBcPu0C9uhUNsrx1o3O/9XuueWbg==", "+905400000001", true, "1462aeb6-7874-4c59-b7af-ecf797bcb21a", false, "admin@gmail.com" });
+                values: new object[] { new Guid("84ccaf88-5507-4dbf-8ddd-8f607db51f0a"), 0, "5d2fcfd9-cb59-41ec-9d9b-74a7aea9b949", "admin@gmail.com", true, "Alperen", new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"), "Güneş", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAELstQFV7AE+c+G1nIpP4vA79COuO5SbBgLLXdcqT902GKVzkz3X/G6P5El6yxc2YOQ==", "+905400000001", true, "94ce2ff4-ba5c-442e-9510-0f0e0a4e4a8b", false, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "Articles",
                 columns: new[] { "Id", "AppUserId", "CategoryId", "Content", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "ImageId", "IsDeleted", "ModifiedBy", "ModifiedDate", "Title", "ViewCount" },
                 values: new object[,]
                 {
-                    { new Guid("2a8f6c9a-ee2c-4fc8-8a80-920b70c0e053"), new Guid("84ccaf88-5507-4dbf-8ddd-8f607db51f0a"), new Guid("efaf03fc-92eb-45d7-8980-7c75d5a5ea8c"), "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur auctor imperdiet faucibus. In hac habitasse platea dictumst. \r\n							Sed porttitor, nulla ac elementum placerat, felis justo ullamcorper est, et pulvinar nulla velit non risus. \r\n							Proin ac aliquam turpis. Suspendisse non nisi dapibus, viverra lacus nec, fringilla tellus. Donec efficitur lorem ac lacus pharetra sagittis. \r\n							Fusce viverra est vitae quam vulputate, at ornare nisl accumsan. Duis a tincidunt lorem. In nibh lectus, pharetra ac quam.", "User", new DateTime(2024, 2, 9, 16, 56, 14, 846, DateTimeKind.Local).AddTicks(5380), null, null, new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"), false, null, null, "Entity Framework Article 2", 25 },
-                    { new Guid("48c16ef7-3d34-4076-b9ad-be164fa6ae41"), new Guid("7893082f-7266-41f5-8e2c-d89989ee60d0"), new Guid("e5129fa7-7cb3-421a-b6b8-de983725a187"), "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur auctor imperdiet faucibus. In hac habitasse platea dictumst. \r\n							Sed porttitor, nulla ac elementum placerat, felis justo ullamcorper est, et pulvinar nulla velit non risus. \r\n							Proin ac aliquam turpis. Suspendisse non nisi dapibus, viverra lacus nec, fringilla tellus. Donec efficitur lorem ac lacus pharetra sagittis. \r\n							Fusce viverra est vitae quam vulputate, at ornare nisl accumsan. Duis a tincidunt lorem. In nibh lectus, pharetra ac quam.", "Admin", new DateTime(2024, 2, 9, 16, 56, 14, 846, DateTimeKind.Local).AddTicks(5365), null, null, new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"), false, null, null, "ASP.NET Core Article 1", 15 }
+                    { new Guid("9040b5db-87df-4c65-a7bd-633d8e2ddd8e"), new Guid("7893082f-7266-41f5-8e2c-d89989ee60d0"), new Guid("e5129fa7-7cb3-421a-b6b8-de983725a187"), "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur auctor imperdiet faucibus. In hac habitasse platea dictumst. \r\n							Sed porttitor, nulla ac elementum placerat, felis justo ullamcorper est, et pulvinar nulla velit non risus. \r\n							Proin ac aliquam turpis. Suspendisse non nisi dapibus, viverra lacus nec, fringilla tellus. Donec efficitur lorem ac lacus pharetra sagittis. \r\n							Fusce viverra est vitae quam vulputate, at ornare nisl accumsan. Duis a tincidunt lorem. In nibh lectus, pharetra ac quam.", "Admin", new DateTime(2024, 2, 14, 13, 19, 30, 825, DateTimeKind.Local).AddTicks(3795), null, null, new Guid("906d333c-201d-4b39-8e21-52a3acc1ff73"), false, null, null, "ASP.NET Core Article 1", 15 },
+                    { new Guid("d8a86041-b018-4f40-a39d-6851a6b0ee67"), new Guid("84ccaf88-5507-4dbf-8ddd-8f607db51f0a"), new Guid("efaf03fc-92eb-45d7-8980-7c75d5a5ea8c"), "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur auctor imperdiet faucibus. In hac habitasse platea dictumst. \r\n							Sed porttitor, nulla ac elementum placerat, felis justo ullamcorper est, et pulvinar nulla velit non risus. \r\n							Proin ac aliquam turpis. Suspendisse non nisi dapibus, viverra lacus nec, fringilla tellus. Donec efficitur lorem ac lacus pharetra sagittis. \r\n							Fusce viverra est vitae quam vulputate, at ornare nisl accumsan. Duis a tincidunt lorem. In nibh lectus, pharetra ac quam.", "User", new DateTime(2024, 2, 14, 13, 19, 30, 825, DateTimeKind.Local).AddTicks(3813), null, null, new Guid("3edbde25-8f71-4834-ac2d-c1665c10bc63"), false, null, null, "Entity Framework Article 2", 25 }
                 });
 
             migrationBuilder.InsertData(
@@ -314,6 +351,11 @@ namespace MVCBlog.Data.Migrations
                 name: "IX_Articles_ImageId",
                 table: "Articles",
                 column: "ImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArticleVisitors_VisitorId",
+                table: "ArticleVisitors",
+                column: "VisitorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -363,7 +405,7 @@ namespace MVCBlog.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Articles");
+                name: "ArticleVisitors");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -381,13 +423,19 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Articles");
+
+            migrationBuilder.DropTable(
+                name: "Visitors");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Images");

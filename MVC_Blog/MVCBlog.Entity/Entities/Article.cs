@@ -22,6 +22,8 @@ namespace MVCBlog.Entity.Entities
         public Guid AppUserId { get; set; }
         public AppUser User { get; set; }
 
+        public ICollection<ArticleVisitor> Visitors { get; set; }
+
 
         //Entity Constructor
         public Article()
